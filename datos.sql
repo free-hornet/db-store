@@ -19,7 +19,7 @@ INSERT INTO public.tienda (nombre, fk_id_comuna) VALUES
     ('pc Factory Viña del Mar', 6),
     ('pc Factory Rancagua', 7),
     ('pc Factory Curicó', 8),
-    ('pc Factory Talca', 9);
+    ('pc Factory Puerto Montt', 9);
 
 
 INSERT INTO public.empleado (pk_rut, telefono, nombre, fk_id_comuna) VALUES 
