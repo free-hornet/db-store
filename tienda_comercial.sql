@@ -64,16 +64,16 @@ CREATE TABLE public.sueldo (
     pk_id int GENERATED ALWAYS AS IDENTITY NOT NULL,
     sueldo float4 NOT NULL,
     fecha date NOT NULL,
-    fk_id_empleado int NOT NULL,
+    fk_rut_empleado int NOT NULL,
     CONSTRAINT sueldo_pk PRIMARY KEY (pk_id),
-    CONSTRAINT sueldo_empleado_fk FOREIGN KEY (fk_id_empleado) REFERENCES empleado(pk_rut)
+    CONSTRAINT sueldo_empleado_fk FOREIGN KEY (fk_rut_empleado) REFERENCES empleado(pk_rut)
 );
 COMMENT ON TABLE public.sueldo IS 'tabla que guarda los datos de los sueldos';
 -- Column comments
 COMMENT ON COLUMN public.sueldo.pk_id IS 'Identificador del sueldo';
 COMMENT ON COLUMN public.sueldo.sueldo IS 'Sueldo del empleado';
 COMMENT ON COLUMN public.sueldo.fecha IS 'Fecha del sueldo';
-COMMENT ON COLUMN public.sueldo.fk_id_empleado IS 'Identificador del empleado al que se le pago el sueldo';
+COMMENT ON COLUMN public.sueldo.fk_rut_empleado IS 'Identificador del empleado al que se le pago el sueldo';
 
 
 CREATE TABLE public.vendedor (
