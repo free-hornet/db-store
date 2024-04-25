@@ -105,7 +105,7 @@ INSERT INTO public.tienda_empleado (cargo, fecha_inicio, fecha_fin, fk_rut_emple
 
 
 
-INSERT INTO public.sueldo (sueldo, fecha, fk_id_empleado) VALUES 
+INSERT INTO public.sueldo (sueldo, fecha, fk_rut_empleado) VALUES  
 -- Sueldos para enero de 2023
 (1500000, '2023-01-01', 19772950), -- Joaquín Torres
 (1200000, '2023-01-01', 19300275), -- María Fernández
@@ -169,7 +169,7 @@ INSERT INTO public.sueldo (sueldo, fecha, fk_id_empleado) VALUES
 (1100000, '2023-02-01', 21789012); -- Gabriel Sánchez
 
 
-INSERT INTO public.vendedor (fk_rut_empleado) VALUES 
+INSERT INTO public.vendedor (fk_id_empleado) VALUES 
 (19772950),
 (20418032),
 (19885567),
