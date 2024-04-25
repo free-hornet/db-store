@@ -55,6 +55,53 @@ INSERT INTO public.empleado (pk_rut, telefono, nombre, fk_id_comuna) VALUES
 
 
 INSERT INTO public.tienda_empleado (cargo, fecha_inicio, fecha_fin, fk_rut_empleado, fk_id_tienda) VALUES
+-- Empleados de la tienda en Calama
+('director', '2023-01-01', NULL, 19772950, 1),
+('gerente', '2023-01-01', NULL, 19300275, 1),
+('vendedor', '2023-01-01', NULL, 15788966, 1),
+
+-- Empleados de la tienda en Antofagasta
+('director', '2022-12-01', '2023-06-30', 20418032, 2),
+('gerente', '2023-01-01', NULL, 22577894, 2),
+('vendedor', '2023-01-01', NULL, 21445765, 2),
+
+-- Empleados de la tienda en Copiapó
+('director', '2022-11-01', NULL, 19885567, 3),
+('gerente', '2023-01-01', NULL, 22346891, 3),
+('vendedor', '2023-01-01', NULL, 19562347, 3),
+
+-- Empleados de la tienda en La Serena
+('director', '2023-01-01', NULL, 21087543, 4),
+('gerente', '2023-01-01', NULL, 23654432, 4),
+('vendedor', '2023-01-01', NULL, 20347891, 4),
+
+-- Empleados de la tienda en Santiago (Costanera Center)
+('director', '2023-01-01', NULL, 21985432, 5),
+('gerente', '2023-01-01', NULL, 22897654, 5),
+('vendedor', '2023-01-01', NULL, 19123567, 5),
+
+-- Empleados de la tienda en Viña del Mar
+('director', '2023-01-01', NULL, 20786543, 6),
+('gerente', '2023-01-01', NULL, 18234567, 6),
+('vendedor', '2023-01-01', NULL, 21345678, 6),
+
+-- Empleados de la tienda en Rancagua
+('director', '2023-01-01', NULL, 23898765, 7),
+('gerente', '2023-01-01', NULL, 20123456, 7),
+('vendedor', '2023-01-01', NULL, 19567890, 7),
+
+-- Empleados de la tienda en Curicó
+('director', '2023-01-01', NULL, 21678901, 8),
+('gerente', '2023-01-01', NULL, 23547890, 8),
+('vendedor', '2023-01-01', NULL, 20987654, 8),
+
+-- Empleados de la tienda en Puerto Montt
+('director', '2023-01-01', NULL, 22456789, 9),
+('gerente', '2023-01-01', NULL, 19876543, 9),
+('vendedor', '2023-01-01', NULL, 22233445, 9),
+-- Cambios y fin de roles
+('vendedor', '2024-01-01', '2024-03-31', 22233445, 9),
+('gerente', '2024-04-01', NULL, 22233445, 9);
 
 
 
