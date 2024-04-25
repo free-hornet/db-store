@@ -7,7 +7,7 @@ INSERT INTO public.comuna (nombre) VALUES
     ('Viña del Mar'),
     ('Rancagua'),
     ('Curicó'),
-    ('Talca');
+    ('Puerto Montt');
 
 
 INSERT INTO public.tienda (nombre, fk_id_comuna) VALUES
