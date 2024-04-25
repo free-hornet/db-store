@@ -43,7 +43,7 @@ CREATE TABLE public.tienda_empleado (
     pk_id int GENERATED ALWAYS AS IDENTITY NOT NULL,
     cargo varchar NOT NULL,
     fecha_inicio date NOT NULL,
-    fecha_fin date NOT NULL,
+    fecha_fin date,
     fk_rut_empleado int NOT NULL,
     fk_id_tienda int NOT NULL,
     CONSTRAINT tienda_empleado_pk PRIMARY KEY (pk_id),
