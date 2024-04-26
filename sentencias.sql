@@ -27,3 +27,9 @@ select e.nombre, c.nombre from vendedor v join empleado e on v.fk_rut_empleado =
 
 -- Lista de las ventas entre el 15 de Marzo y 10 de Septiembre de 2023. Mostrando:  fecha, nombre y rut del vendedor
 select e.nombre, e.pk_rut, fecha from venta ve join vendedor v on fk_id_vendedor = v.pk_id join empleado e on v.fk_rut_empleado = e.pk_rut where fecha > '2023-04-15' and fecha < '2023-09-10';
+
+-- Muestra los sueldos mayores al promedio de los sueldos
+SELECT  sueldo, fk_rut_empleado, nombre 
+FROM    sueldo s join empleado e on fk_rut_empleado = pk_rut
+WHERE   sueldo > (SELECT AVG(sueldo)
+                 FROM sueldo s2);
