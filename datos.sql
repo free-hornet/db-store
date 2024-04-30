@@ -237,18 +237,24 @@ LIMIT 100;
 
 INSERT INTO public.producto_venta (cantidad, fk_id_venta, fk_id_producto)
 SELECT 
-    ROUND(RANDOM() * 10) + 1 AS cantidad, -- Genera una cantidad aleatoria entre 1 y 10
-    venta.pk_id AS fk_id_venta,          -- Selecciona un id de venta aleatorio
-    producto.pk_id AS fk_id_producto     -- Selecciona un id de producto aleatorio
+    cantidades.cantidad,
+    venta.pk_id AS fk_id_venta,
+    producto.pk_id AS fk_id_producto
 FROM 
-    public.venta AS venta
+    (SELECT 
+        generate_series(1, 10) AS cantidad
+    ) AS cantidades
 CROSS JOIN 
-    public.producto AS producto
+    public.venta AS venta
+JOIN 
+    public.producto AS producto ON TRUE
+LEFT JOIN 
+    public.producto_venta AS pv ON pv.fk_id_venta = venta.pk_id AND pv.fk_id_producto = producto.pk_id
+WHERE 
+    pv.pk_id IS NULL
 ORDER BY 
-    RANDOM() -- Orden aleatorio de las filas
-LIMIT 100; -- Insertar 100 filas, puedes ajustar este número según sea necesario
-
-   
+    RANDOM()
+LIMIT 100;
 
 
 INSERT INTO public.tipo_documento (tipo, fk_id_venta)
