@@ -228,10 +228,11 @@ INSERT INTO public.producto (precio, nombre) VALUES
 INSERT INTO public.venta (fecha, fk_id_vendedor)
 SELECT 
     DATE '2023-01-01' + INTERVAL '1 day' * FLOOR(RANDOM() * 365) AS fecha,
-    (SELECT pk_id FROM public.vendedor ORDER BY RANDOM() LIMIT 1) AS fk_id_vendedor
+    v.pk_id AS fk_id_vendedor
 FROM 
-    generate_series(1, 100) i
-limit 100;
+    generate_series(1, 100) i,
+    (SELECT pk_id FROM public.vendedor ORDER BY RANDOM()) v
+LIMIT 100;
 
 
 INSERT INTO public.producto_venta (cantidad, fk_id_venta, fk_id_producto)
@@ -248,17 +249,17 @@ ORDER BY
 LIMIT 100; -- Insertar 100 filas, puedes ajustar este número según sea necesario
 
    
-INSERT INTO public.tipo_documento (monto, tipo, fecha, fk_id_venta)
+
+
+INSERT INTO public.tipo_documento (tipo, fk_id_venta)
 SELECT 
-    ROUND(RANDOM() * 100000) AS monto,                       -- Genera un monto aleatorio
     CASE 
         WHEN RANDOM() < 0.5 THEN 'boleta' 
         ELSE 'factura' 
-    END AS tipo,                                             -- Asigna aleatoriamente 'boleta' o 'factura'
-    DATE '2023-01-01' + INTERVAL '1 day' * FLOOR(RANDOM() * 365) AS fecha, -- Genera una fecha aleatoria dentro de 2023
-    venta.pk_id AS fk_id_venta                               -- Selecciona un id de venta aleatorio
+    END AS tipo,    -- Asigna aleatoriamente 'boleta' o 'factura'
+    venta.pk_id AS fk_id_venta  -- Selecciona un id de venta aleatorio
 FROM 
     public.venta AS venta
 ORDER BY 
-    RANDOM()                                                  -- Orden aleatorio de las filas
-LIMIT 100;                                                    -- Insertar 100 filas, puedes ajustar este número según sea necesario
+    RANDOM()    -- Orden aleatorio de las filas
+LIMIT 100;   -- Insertar 100 filas, puedes ajustar este número según sea necesario
