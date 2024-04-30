@@ -1,3 +1,4 @@
+--- Sentencias entrega 2 ---
 -- Nombre e id de las comunas
 select nombre, pk_id from comuna c;
 
@@ -33,3 +34,19 @@ SELECT  sueldo, fk_rut_empleado, nombre
 FROM    sueldo s join empleado e on fk_rut_empleado = pk_rut
 WHERE   sueldo > (SELECT AVG(sueldo)
                  FROM sueldo s2);
+
+
+--- Sentencias entrega 3 ---
+
+-- Producto más vendido
+select * from (select p.nombre AS producto, SUM(pv.cantidad) AS total_vendido
+FROM producto p
+JOIN producto_venta pv ON p.pk_id = pv.fk_id_producto
+JOIN venta v ON pv.fk_id_venta = v.pk_id
+GROUP BY p.nombre) a
+where a.total_vendido = (select (max(a.total_vendido)) from (select p.nombre AS producto, SUM(pv.cantidad) AS total_vendido
+FROM producto p
+JOIN producto_venta pv ON p.pk_id = pv.fk_id_producto
+JOIN venta v ON pv.fk_id_venta = v.pk_id
+GROUP BY p.nombre) a);
+
