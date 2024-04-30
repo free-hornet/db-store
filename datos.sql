@@ -227,29 +227,11 @@ INSERT INTO public.producto (precio, nombre) VALUES
 
 INSERT INTO public.venta (fecha, fk_id_vendedor)
 SELECT 
-    DATE '2023-01-01' + CAST(RANDOM() * 365 AS INTEGER) AS fecha,
-    pk_id AS fk_id_vendedor
-FROM 
-    public.vendedor
-ORDER BY 
-    RANDOM()
-LIMIT 100;
-
-
-
-
-
-INSERT INTO public.venta (fecha, fk_id_vendedor)
-SELECT 
     DATE '2023-01-01' + INTERVAL '1 day' * FLOOR(RANDOM() * 365) AS fecha,
-    v.pk_id AS fk_id_vendedor
+    (SELECT pk_id FROM public.vendedor ORDER BY RANDOM() LIMIT 1) AS fk_id_vendedor
 FROM 
-    public.vendedor AS v
-ORDER BY 
-    RANDOM()
-LIMIT 100;
-
-
+    generate_series(1, 100) i
+limit 100;
 
 
 INSERT INTO public.producto_venta (cantidad, fk_id_venta, fk_id_producto)
@@ -280,4 +262,3 @@ FROM
 ORDER BY 
     RANDOM()                                                  -- Orden aleatorio de las filas
 LIMIT 100;                                                    -- Insertar 100 filas, puedes ajustar este número según sea necesario
-
