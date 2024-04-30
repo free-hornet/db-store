@@ -134,9 +134,7 @@ COMMENT ON COLUMN public.producto_venta.fk_id_producto IS 'Identificador del pro
 
 CREATE TABLE public.tipo_documento (
     pk_id int GENERATED ALWAYS AS IDENTITY NOT NULL,
-    monto float4 NOT NULL,
     tipo VARCHAR(10) CHECK (tipo IN ('boleta', 'factura')), -- Restricción CHECK para limitar los valores
-    fecha date NOT NULL,
     fk_id_venta int NOT NULL,
     CONSTRAINT tipo_documento_pk PRIMARY KEY (pk_id),
     CONSTRAINT tipo_documento_venta_fk FOREIGN KEY (fk_id_venta) REFERENCES venta(pk_id)
@@ -144,7 +142,5 @@ CREATE TABLE public.tipo_documento (
 COMMENT ON TABLE public.tipo_documento IS 'tabla que guarda los datos de los tipos de documentos';
 -- Column comments
 COMMENT ON COLUMN public.tipo_documento.pk_id IS 'Identificador del tipo de documento';
-COMMENT ON COLUMN public.tipo_documento.monto IS 'Monto del documento';
 COMMENT ON COLUMN public.tipo_documento.tipo IS 'Tipo de documento ESTRICTAMENTE BOLETA O FACTURA';
-COMMENT ON COLUMN public.tipo_documento.fecha IS 'Fecha del documento';
 COMMENT ON COLUMN public.tipo_documento.fk_id_venta IS 'Identificador de la venta';
