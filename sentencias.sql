@@ -136,3 +136,16 @@ select cast(anio as varchar), rut, nombre, monto from (
 	group by EXTRACT(YEAR FROM v.fecha), e.pk_rut, e.nombre
 ) a
 where ranking = 1;
+
+-- 8. El vendedor con más productos vendidos por tienda
+
+-- 9. El empleado con menor sueldo por mes
+select mes, rut, nombre, sueldo from (
+	select TO_CHAR(s.fecha, 'YYYY-MM') as mes, e.pk_rut as rut, e.nombre, s.sueldo,
+		RANK() over (partition by TO_CHAR(s.fecha, 'YYYY-MM') order by s.sueldo) as ranking
+	from sueldo s
+	join empleado e on s.fk_rut_empleado = e.pk_rut
+) a
+where ranking = 1;
+
+-- 10. La tienda con mayor recaudación por mes
