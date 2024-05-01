@@ -38,7 +38,7 @@ WHERE   sueldo > (SELECT AVG(sueldo)
 
 --- Sentencias entrega 3 ---
 
--- Producto más vendido
+-- 1. Producto más vendido
 select * from (select p.nombre AS producto, SUM(pv.cantidad) AS total_vendido
 FROM producto p
 JOIN producto_venta pv ON p.pk_id = pv.fk_id_producto
@@ -50,8 +50,7 @@ JOIN producto_venta pv ON p.pk_id = pv.fk_id_producto
 JOIN venta v ON pv.fk_id_venta = v.pk_id
 GROUP BY p.nombre) a);
 
--- Producto más caro por tienda
-
+-- 2. Producto más caro por tienda
 SELECT id_tienda, id_producto, nombre_producto, precio
 FROM (
 	SELECT id_tienda, id_producto, nombre_producto, precio, RANK() OVER (PARTITION BY id_tienda ORDER BY precio DESC) AS ranking
@@ -67,3 +66,13 @@ FROM (
 	) AS productos_por_tienda
 ) AS productos_con_ranking
 WHERE ranking = 1;
+
+-- 3. ventas por mes, separadas entre Boletas y Facturas
+SELECT TO_CHAR(v.fecha, 'YYYY-MM') AS mes, td.tipo, COUNT(pv.pk_id) AS cantidad
+FROM tipo_documento td
+JOIN venta v ON td.fk_id_venta = v.pk_id
+JOIN producto_venta pv ON v.pk_id = pv.fk_id_venta
+WHERE td.tipo IN ('boleta', 'factura')
+GROUP BY mes, tipo
+ORDER BY mes, tipo;
+
