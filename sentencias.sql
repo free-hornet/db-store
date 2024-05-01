@@ -123,3 +123,16 @@ select mes, rut, nombre, cantidad_ventas from (
 	group by e.pk_rut, e.nombre, TO_CHAR(v.fecha, 'YYYY-MM')
 ) a
 where ranking = 1;
+
+-- 7. El vendedor que ha recaudado más dinero para la tienda por año
+select cast(anio as varchar), rut, nombre, monto from (
+	select EXTRACT(YEAR FROM v.fecha) as anio, e.pk_rut as rut, e.nombre, SUM(p.precio * pv.cantidad) as monto,
+		RANK() over (partition by EXTRACT(YEAR FROM v.fecha) order by SUM(p.precio * pv.cantidad) desc) as ranking
+	from venta v
+	join producto_venta pv on v.pk_id = pv.fk_id_venta
+	join producto p on pv.fk_id_producto = p.pk_id
+	join vendedor vd on v.fk_id_vendedor = vd.pk_id
+	join empleado e on vd.fk_rut_empleado = e.pk_rut
+	group by EXTRACT(YEAR FROM v.fecha), e.pk_rut, e.nombre
+) a
+where ranking = 1;
