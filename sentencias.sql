@@ -30,49 +30,45 @@ select e.nombre, c.nombre from vendedor v join empleado e on v.fk_rut_empleado =
 select e.nombre, e.pk_rut, fecha from venta ve join vendedor v on fk_id_vendedor = v.pk_id join empleado e on v.fk_rut_empleado = e.pk_rut where fecha > '2023-04-15' and fecha < '2023-09-10';
 
 -- Muestra los sueldos mayores al promedio de los sueldos
-SELECT  sueldo, fk_rut_empleado, nombre 
-FROM    sueldo s join empleado e on fk_rut_empleado = pk_rut
-WHERE   sueldo > (SELECT AVG(sueldo)
-                 FROM sueldo s2);
+select  sueldo, fk_rut_empleado, nombre 
+from    sueldo s join empleado e on fk_rut_empleado = pk_rut
+where   sueldo > (select AVG(sueldo)
+                 from sueldo s2);
 
 
 --- Sentencias entrega 3 ---
 
 -- 1. Producto más vendido
-select * from (select p.nombre AS producto, SUM(pv.cantidad) AS total_vendido
-FROM producto p
-JOIN producto_venta pv ON p.pk_id = pv.fk_id_producto
-JOIN venta v ON pv.fk_id_venta = v.pk_id
-GROUP BY p.nombre) a
-where a.total_vendido = (select (max(a.total_vendido)) from (select p.nombre AS producto, SUM(pv.cantidad) AS total_vendido
-FROM producto p
-JOIN producto_venta pv ON p.pk_id = pv.fk_id_producto
-JOIN venta v ON pv.fk_id_venta = v.pk_id
-GROUP BY p.nombre) a);
+select * from (select p.nombre as producto, SUM(pv.cantidad) as total_vendido
+from producto p
+join producto_venta pv on p.pk_id = pv.fk_id_producto
+join venta v on pv.fk_id_venta = v.pk_id
+group by p.nombre) a
+where a.total_vendido = (select (max(a.total_vendido)) from (select p.nombre as producto, SUM(pv.cantidad) as total_vendido
+from producto p
+join producto_venta pv on p.pk_id = pv.fk_id_producto
+join venta v on pv.fk_id_venta = v.pk_id
+group by p.nombre) a);
 
 -- 2. Producto más caro por tienda
-SELECT id_tienda, id_producto, nombre_producto, precio
-FROM (
-	SELECT id_tienda, id_producto, nombre_producto, precio, RANK() OVER (PARTITION BY id_tienda ORDER BY precio DESC) AS ranking
-	FROM (
-		select te.fk_id_tienda as id_tienda, p.pk_id AS id_producto, p.nombre AS nombre_producto, p.precio 
-		FROM public.producto p
-		JOIN public.producto_venta pv ON p.pk_id = pv.fk_id_producto
-		JOIN public.venta v ON pv.fk_id_venta = v.pk_id
-		JOIN public.vendedor vd ON v.fk_id_vendedor = vd.pk_id
-		JOIN public.empleado e ON vd.fk_rut_empleado = e.pk_rut
-		JOIN public.tienda_empleado te ON e.pk_rut = te.fk_rut_empleado
+select id_tienda, id_producto, nombre_producto, precio
+from (select te.fk_id_tienda as id_tienda, p.pk_id as id_producto, p.nombre as nombre_producto, p.precio, RANK() over (partition by te.fk_id_tienda order by p.precio desc) as ranking
+		from public.producto p
+		join public.producto_venta pv on p.pk_id = pv.fk_id_producto
+		join public.venta v on pv.fk_id_venta = v.pk_id
+		join public.vendedor vd on v.fk_id_vendedor = vd.pk_id
+		join public.empleado e on vd.fk_rut_empleado = e.pk_rut
+		join public.tienda_empleado te on e.pk_rut = te.fk_rut_empleado
 		group by te.fk_id_tienda, p.pk_id
-	) AS productos_por_tienda
-) AS productos_con_ranking
-WHERE ranking = 1;
+		)
+where ranking = 1;
 
--- 3. ventas por mes, separadas entre Boletas y Facturas
-SELECT TO_CHAR(v.fecha, 'YYYY-MM') AS mes, td.tipo, COUNT(pv.pk_id) AS cantidad
-FROM tipo_documento td
-JOIN venta v ON td.fk_id_venta = v.pk_id
-JOIN producto_venta pv ON v.pk_id = pv.fk_id_venta
-WHERE td.tipo IN ('boleta', 'factura')
-GROUP BY mes, tipo
-ORDER BY mes, tipo;
+-- 3. Ventas por mes, separadas entre Boletas y Facturas
+select TO_CHAR(v.fecha, 'YYYY-MM') as mes, td.tipo, COUNT(pv.pk_id) as cantidad
+from tipo_documento td
+join venta v on td.fk_id_venta = v.pk_id
+join producto_venta pv on v.pk_id = pv.fk_id_venta
+where td.tipo in ('boleta', 'factura')
+group by mes, tipo
+order by mes, tipo;
 
