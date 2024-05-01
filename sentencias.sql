@@ -111,3 +111,15 @@ where a.cantidad_empleados = (
 		order by id_tienda
 	) a
 );
+
+-- 6. El venddor con más ventas por mes
+select mes, rut, nombre, cantidad_ventas from (
+	select TO_CHAR(v.fecha, 'YYYY-MM') as mes, e.pk_rut as rut, e.nombre, COUNT(pv.pk_id) as cantidad_ventas,
+		RANK() over (partition by TO_CHAR(v.fecha, 'YYYY-MM') order by COUNT(pv.pk_id) desc) as ranking
+	from venta v
+	join producto_venta pv on v.pk_id = pv.fk_id_venta
+	join vendedor vd on v.fk_id_vendedor = vd.pk_id
+	join empleado e on vd.fk_rut_empleado = e.pk_rut
+	group by e.pk_rut, e.nombre, TO_CHAR(v.fecha, 'YYYY-MM')
+) a
+where ranking = 1;
