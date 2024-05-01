@@ -39,16 +39,21 @@ where   sueldo > (select AVG(sueldo)
 --- Sentencias entrega 3 ---
 
 -- 1. Producto más vendido
-select * from (select p.nombre as producto, SUM(pv.cantidad) as total_vendido
-from producto p
-join producto_venta pv on p.pk_id = pv.fk_id_producto
-join venta v on pv.fk_id_venta = v.pk_id
-group by p.nombre) a
-where a.total_vendido = (select (max(a.total_vendido)) from (select p.nombre as producto, SUM(pv.cantidad) as total_vendido
-from producto p
-join producto_venta pv on p.pk_id = pv.fk_id_producto
-join venta v on pv.fk_id_venta = v.pk_id
-group by p.nombre) a);
+select * from (
+	select p.nombre as producto, SUM(pv.cantidad) as total_vendido
+	from producto p
+	join producto_venta pv on p.pk_id = pv.fk_id_producto
+	join venta v on pv.fk_id_venta = v.pk_id
+	group by p.nombre) a
+where a.total_vendido = (
+	select (max(a.total_vendido)) 
+	from (
+		select p.nombre as producto, SUM(pv.cantidad) as total_vendido
+		from producto p
+		join producto_venta pv on p.pk_id = pv.fk_id_producto
+		join venta v on pv.fk_id_venta = v.pk_id
+		group by p.nombre
+		) a);
 
 -- 2. Producto más caro por tienda (si dos o más productos son los más caros se muestran igualmente)
 select id_tienda, id_producto, nombre_producto, precio
@@ -84,3 +89,25 @@ select rut, id_tienda, nombre, id_tienda, comuna, cargo, sueldo from
 )
 where ranking = 1
 group by id_tienda, rut, nombre, comuna, cargo, sueldo;
+
+-- 5. La tienda que tiene más empleados
+select * from 
+(
+	select te.fk_id_tienda as id_tienda, t.nombre as nombre_tienda, count(te.fk_rut_empleado) as cantidad_empleados
+	from tienda_empleado te
+	join tienda t on te.fk_id_tienda = t.pk_id
+	where te.fecha_fin is null
+	group by id_tienda, nombre_tienda
+	order by id_tienda
+) a
+where a.cantidad_empleados = (
+	select max(a.cantidad_empleados)
+	from(
+		select te.fk_id_tienda as id_tienda, t.nombre as nombre_tienda, count(te.fk_rut_empleado) as cantidad_empleados
+		from tienda_empleado te
+		join tienda t on te.fk_id_tienda = t.pk_id
+		where te.fecha_fin is null
+		group by id_tienda, nombre_tienda
+		order by id_tienda
+	) a
+);
