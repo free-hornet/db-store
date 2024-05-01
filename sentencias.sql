@@ -50,7 +50,7 @@ join producto_venta pv on p.pk_id = pv.fk_id_producto
 join venta v on pv.fk_id_venta = v.pk_id
 group by p.nombre) a);
 
--- 2. Producto más caro por tienda
+-- 2. Producto más caro por tienda (si dos o más productos son los más caros se muestran igualmente)
 select id_tienda, id_producto, nombre_producto, precio
 from (select te.fk_id_tienda as id_tienda, p.pk_id as id_producto, p.nombre as nombre_producto, p.precio, RANK() over (partition by te.fk_id_tienda order by p.precio desc) as ranking
 		from public.producto p
@@ -72,3 +72,15 @@ where td.tipo in ('boleta', 'factura')
 group by mes, tipo
 order by mes, tipo;
 
+-- 4. Empleado que gana más por tienda, indicando la comuna donde vive y el cargo que tiene en la empresa
+select rut, id_tienda, nombre, id_tienda, comuna, cargo, sueldo from
+ (
+	select e.pk_rut as rut, e.nombre, te.fk_id_tienda as id_tienda, c.nombre as comuna, te.cargo, s.sueldo,
+		RANK() over (partition by te.fk_id_tienda order by s.sueldo desc) as ranking
+	from sueldo s
+	join empleado e on s.fk_rut_empleado = e.pk_rut
+	join tienda_empleado te on e.pk_rut = te.fk_rut_empleado
+	join comuna c on e.fk_id_comuna = c.pk_id
+)
+where ranking = 1
+group by id_tienda, rut, nombre, comuna, cargo, sueldo;
