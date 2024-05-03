@@ -167,3 +167,18 @@ select mes, rut, nombre, sueldo from (
 where ranking = 1;
 
 -- 10. La tienda con mayor recaudación por mes
+SELECT mes, id_tienda, nombre_tienda, recaudacion_total
+FROM (
+    SELECT TO_CHAR(v.fecha, 'YYYY-MM') AS mes,
+           t.pk_id AS id_tienda,
+           t.nombre AS nombre_tienda,
+           SUM(p.precio * pv.cantidad) AS recaudacion_total,
+           RANK() OVER (PARTITION BY TO_CHAR(v.fecha, 'YYYY-MM') ORDER BY SUM(p.precio * pv.cantidad) DESC) AS rank
+    FROM venta v
+    JOIN producto_venta pv ON v.pk_id = pv.fk_id_venta
+    JOIN producto p ON pv.fk_id_producto = p.pk_id
+    JOIN tienda_empleado te ON v.fk_id_vendedor = te.pk_id
+    JOIN tienda t ON te.fk_id_tienda = t.pk_id
+    GROUP BY TO_CHAR(v.fecha, 'YYYY-MM'), t.pk_id, t.nombre
+) AS ranked_data
+WHERE rank = 1;
