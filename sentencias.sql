@@ -138,6 +138,24 @@ select cast(anio as varchar), rut, nombre, monto from (
 where ranking = 1;
 
 -- 8. El vendedor con más productos vendidos por tienda
+select rut, nombre, id_tienda, nombre_tienda, cantidad_productos_vendidos from (
+    select
+        vd.fk_rut_empleado as rut,
+        e.nombre as nombre,
+        t.pk_id as id_tienda,
+        t.nombre as nombre_tienda,
+        SUM(pv.cantidad) as cantidad_productos_vendidos,
+        RANK() over (partition by t.pk_id order by SUM(pv.cantidad) desc) as ranking
+    from venta v
+    join producto_venta pv on v.pk_id = pv.fk_id_venta
+    join vendedor vd on v.fk_id_vendedor = vd.pk_id
+    join empleado e on vd.fk_rut_empleado = e.pk_rut
+    join tienda_empleado te on e.pk_rut = te.fk_rut_empleado
+    join tienda t on te.fk_id_tienda = t.pk_id
+    group by vd.fk_rut_empleado, e.nombre, t.pk_id, t.nombre
+) as subquery
+where ranking = 1;
+
 
 -- 9. El empleado con menor sueldo por mes
 select mes, rut, nombre, sueldo from (
